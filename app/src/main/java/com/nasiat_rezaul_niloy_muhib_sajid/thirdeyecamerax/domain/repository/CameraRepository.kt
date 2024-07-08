@@ -1,5 +1,6 @@
 package com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.domain.repository
 
+import android.content.Context
 import androidx.camera.view.LifecycleCameraController
 
 interface CameraRepository {
@@ -9,6 +10,7 @@ interface CameraRepository {
     )
 
     suspend fun recordVideo (
-        controller: LifecycleCameraController
+        controller: LifecycleCameraController,
+        context: Context
     )
 }

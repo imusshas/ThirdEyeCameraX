@@ -1,8 +1,11 @@
-package com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.domain.repository
+package com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.data.repository
 
+import android.Manifest
 import android.app.Application
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.net.Uri
@@ -17,6 +20,7 @@ import androidx.camera.video.Recording
 import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.R
 import com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.domain.repository.CameraRepository
@@ -41,6 +45,7 @@ class CameraRepositoryImpl @Inject constructor(
         controller.takePicture(
             ContextCompat.getMainExecutor(application),
             object : ImageCapture.OnImageCapturedCallback() {
+                @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onCaptureSuccess(image: ImageProxy) {
                     super.onCaptureSuccess(image)
 
@@ -67,8 +72,10 @@ class CameraRepositoryImpl @Inject constructor(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override suspend fun recordVideo(
-        controller: LifecycleCameraController
+        controller: LifecycleCameraController,
+        context: Context
     ) {
 
         if (recoding != null) {
@@ -83,6 +90,20 @@ class CameraRepositoryImpl @Inject constructor(
             "${timeInMillis}_video" + ".mp4"
         )
 
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         recoding = controller.startRecording(
             FileOutputOptions.Builder(file).build(),
             AudioConfig.create(true),

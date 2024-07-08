@@ -1,5 +1,6 @@
 package com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.presentation
 
+import android.content.Context
 import androidx.camera.view.LifecycleCameraController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,12 +30,13 @@ class CameraViewModel @Inject constructor(
     }
 
     fun onRecordVideo(
-        controller: LifecycleCameraController
+        controller: LifecycleCameraController,
+        context: Context
     ) {
         _isRecording.update { !isRecording.value }
 
         viewModelScope.launch {
-            cameraRepository.recordVideo(controller)
+            cameraRepository.recordVideo(controller, context)
         }
     }
 

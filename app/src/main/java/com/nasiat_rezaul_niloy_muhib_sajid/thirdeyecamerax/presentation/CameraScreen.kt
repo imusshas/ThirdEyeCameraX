@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,8 @@ import com.nasiat_rezaul_niloy_muhib_sajid.thirdeyecamerax.R
 fun CameraScreen(
     activity: Activity
 ) {
+    val context = LocalContext.current
+
     val controller = remember {
         LifecycleCameraController(
             activity.applicationContext
@@ -124,7 +127,7 @@ fun CameraScreen(
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
                         if ((activity as MainActivity).arePermissionsGranted()) {
-                            cameraViewModel.onRecordVideo(controller)
+                            cameraViewModel.onRecordVideo(controller, context)
                         }
                     },
                 contentAlignment = Alignment.Center
